@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - UniMarket</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-slate-100 font-sans flex h-screen overflow-hidden">
+
+<div class="w-64 bg-slate-900 text-slate-300 flex flex-col h-full shadow-xl">
+    <div class="p-5 text-xl font-bold text-white border-b border-slate-800 flex items-center gap-2">
+        <i class="fa-solid fa-bag-shopping text-indigo-400"></i> UniMarket
+    </div>
+
+    <nav class="flex-1 p-4 space-y-2">
+        <a href="#" id="menuAdmin" class="hidden flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition font-medium">
+            <i class="fa-solid fa-user-shield text-red-400"></i> Sellers Validation
+        </a>
+        <a href="#" id="menuVanzator" class="hidden flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition font-medium">
+            <i class="fa-solid fa-store text-amber-400"></i> My Products
+        </a>
+        <a href="#" id="menuCumparator" class="hidden flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition font-medium">
+            <i class="fa-solid fa-basket-shopping text-emerald-400"></i> Product showcase
+        </a>
+    </nav>
+
+    <div class="p-4 border-t border-slate-800 text-sm">
+        <div class="text-slate-400">User:</div>
+        <div class="font-semibold text-white truncate" id="userDisplayEmail">email@user.com</div>
+        <button onclick="logout()" class="mt-3 w-full bg-slate-800 hover:bg-red-600 hover:text-white text-slate-300 py-2 rounded-xl transition text-xs font-semibold">
+            <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> Logout
+        </button>
+    </div>
+</div>
+
+<div class="flex-1 flex flex-col h-full overflow-y-auto p-8">
+
+    <div id="sectionAdmin" class="hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h2 class="text-xl font-bold text-slate-800 mb-4">Seller Approval Requests</h2>
+            <p class="text-slate-500 text-sm">Membru 2 face tabelul aici...</p>
+        </div>
+    </div>
+
+    <div id="sectionVanzator" class="hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h2 class="text-xl font-bold text-slate-800 mb-4">Add new product</h2>
+            <p class="text-slate-500 text-sm">Membru 3 isi face formularul aici...</p>
+        </div>
+    </div>
+
+    <div id="sectionCumparator" class="hidden space-y-6">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h2 class="text-xl font-bold text-slate-800 mb-4">Available product catalog</h2>
+            <p class="text-slate-500 text-sm">Membru 4 și 5 fac cardurile de produse si de oferte aici</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const role = localStorage.getItem('role');
+    const email = localStorage.getItem('email');
+
+    if (!role || !email) {
+        window.location.href = '/index.html';
+    }
+
+    document.getElementById('userDisplayEmail').innerText = email;
+
+    if (role === 'ADMIN') {
+        document.getElementById('menuAdmin').classList.remove('hidden');
+        document.getElementById('sectionAdmin').classList.remove('hidden');
+    } else if (role === 'VANZATOR') {
+        document.getElementById('menuVanzator').classList.remove('hidden');
+        document.getElementById('sectionVanzator').classList.remove('hidden');
+    } else {
+        document.getElementById('menuCumparator').classList.remove('hidden');
+        document.getElementById('sectionCumparator').classList.remove('hidden');
+    }
+
+    function logout() {
+        localStorage.clear();
+        window.location.href = '/index.html';
+    }
+</script>
+</body>
+</html>

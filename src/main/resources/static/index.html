@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autentificare - Marketplace</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 flex items-center justify-center vh-100 min-h-screen">
+
+<div class="bg-white p-8 rounded-2xl shadow-md w-full max-w-md border border-slate-100">
+    <h3 class="text-2xl font-bold text-center mb-6 text-slate-800" id="formTitle">Autentificare</h3>
+
+    <div id="authAlert"
+         class="hidden bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-4 text-sm"></div>
+
+    <form id="authForm" class="space-y-4">
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1">Adresă Email</label>
+            <input type="email" id="email" required
+                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                   placeholder="nume@email.com">
+        </div>
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1">Parolă</label>
+            <input type="password" id="password" required
+                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                   placeholder="******">
+        </div>
+
+        <div id="roleSelection" class="hidden">
+            <label class="block text-sm font-semibold text-slate-700 mb-1">Tip Utilizator</label>
+            <select id="role"
+                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white">
+                <option value="CUMPARATOR">Cumpărător</option>
+                <option value="VANZATOR">Vânzător (Necesită aprobare)</option>
+            </select>
+        </div>
+
+        <button type="submit" id="submitBtn"
+                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl transition shadow-sm shadow-indigo-500/20">
+            Conectare
+        </button>
+    </form>
+
+    <div class="text-center mt-4">
+        <a href="#" id="toggleAuthMode" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">Nu ai cont?
+            Înregistrează-te</a>
+    </div>
+</div>
+
+<script>
+    let isLoginMode = true;
+    const authForm = document.getElementById('authForm');
+    const formTitle = document.getElementById('formTitle');
+    const roleSelection = document.getElementById('roleSelection');
+    const submitBtn = document.getElementById('submitBtn');
+    const toggleAuthMode = document.getElementById('toggleAuthMode');
+    const authAlert = document.getElementById('authAlert');
+
+    toggleAuthMode.addEventListener('click', (e) => {
+        e.preventDefault();
+        isLoginMode = !isLoginMode;
+        formTitle.innerText = isLoginMode ? "Autentificare" : "Înregistrare Cont Nou";
+        submitBtn.innerText = isLoginMode ? "Conectare" : "Creează Cont";
+        toggleAuthMode.innerText = isLoginMode ? "Nu ai cont? Înregistrează-te" : "Ai deja cont? Conectează-te";
+        roleSelection.classList.toggle('hidden', isLoginMode);
+        authAlert.classList.add('hidden');
+    });
+
+    authForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        authAlert.classList.add('hidden');
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const role = document.getElementById('role').value;
+
+        const url = isLoginMode ? '/api/auth/login' : '/api/auth/register';
+        const payload = isLoginMode ? {email, password} : {email, password, role};
+
+        try {
+            const response = await axios.post(url, payload);
+            if (isLoginMode) {
+                localStorage.setItem('role', response.data.role);
+                localStorage.setItem('email', response.data.email);
+                window.location.href = '/dashboard.html';
+            } else {
+                alert('Cont creat! Te poți conecta.');
+                toggleAuthMode.click();
+            }
+        } catch (error) {
+            authAlert.classList.remove('hidden');
+            authAlert.innerText = error.response?.data?.message || "Eroare la autentificare.";
+        }
+    });
+</script>
+</body>
+</html>
