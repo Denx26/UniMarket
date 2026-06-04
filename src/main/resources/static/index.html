@@ -3,50 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autentificare - Marketplace</title>
+    <title>Autentificare - UniMarket</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+        }
+        .animate-blob {
+            animation: float 6s infinite ease-in-out;
+        }
+        .animate-blob-delayed {
+            animation: float 8s infinite ease-in-out;
+            animation-delay: 3s;
+        }
+    </style>
 </head>
-<body class="bg-slate-50 flex items-center justify-center vh-100 min-h-screen">
+<body class="bg-slate-950 flex flex-col items-center justify-center min-h-screen relative overflow-hidden text-slate-100">
 
-<div class="bg-white p-8 rounded-2xl shadow-md w-full max-w-md border border-slate-100">
-    <h3 class="text-2xl font-bold text-center mb-6 text-slate-800" id="formTitle">Authentication</h3>
+<div class="absolute w-72 h-72 bg-indigo-600/20 rounded-full blur-3xl top-10 left-10 animate-blob"></div>
+<div class="absolute w-96 h-96 bg-violet-600/20 rounded-full blur-3xl bottom-10 right-10 animate-blob-delayed"></div>
 
-    <div id="authAlert"
-         class="hidden bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-4 text-sm"></div>
+<p class="text-3xl font-extrabold tracking-tight mb-2 bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">Welcome!</p>
+<p class="text-sm text-slate-400 mb-6 font-medium">UniMarket Platform System</p>
+
+<div class="bg-white/[0.03] backdrop-blur-xl p-8 rounded-3xl shadow-2xl w-full max-w-md border border-white/[0.08] relative z-10">
+    <h3 class="text-2xl font-bold text-center mb-6 text-white tracking-tight" id="formTitle">Authentication</h3>
+
+    <div id="authAlert" class="hidden bg-red-950/40 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl mb-4 text-sm backdrop-blur-md"></div>
 
     <form id="authForm" class="space-y-4">
         <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1">Email Address</label>
+            <label class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
             <input type="email" id="email" required
-                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                   class="w-full px-4 py-2.5 rounded-xl bg-white/[0.05] border border-white/[0.1] text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition"
                    placeholder="nume@email.com">
         </div>
         <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1">Password</label>
+            <label class="block text-sm font-medium text-slate-300 mb-1">Password</label>
             <input type="password" id="password" required
-                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                   class="w-full px-4 py-2.5 rounded-xl bg-white/[0.05] border border-white/[0.1] text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition"
                    placeholder="******">
         </div>
 
         <div id="roleSelection" class="hidden">
-            <label class="block text-sm font-semibold text-slate-700 mb-1">User Type</label>
+            <label class="block text-sm font-medium text-slate-300 mb-1">User Type</label>
             <select id="role"
-                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition bg-white">
+                    class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-white/[0.1] text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition">
                 <option value="CUMPARATOR">Buyer</option>
                 <option value="VANZATOR">Seller (Require approval)</option>
             </select>
         </div>
 
         <button type="submit" id="submitBtn"
-                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl transition shadow-sm shadow-indigo-500/20">
+                class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 rounded-xl transition shadow-lg shadow-indigo-600/30 active:scale-  [0.98]">
             Connect
         </button>
     </form>
 
-    <div class="text-center mt-4">
-        <a href="#" id="toggleAuthMode" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">Nu ai cont?
-            Înregistrează-te</a>
+    <div class="text-center mt-6">
+        <a href="#" id="toggleAuthMode" class="text-sm text-indigo-400 hover:text-indigo-300 font-medium transition">Don't have an account? Register</a>
     </div>
 </div>
 

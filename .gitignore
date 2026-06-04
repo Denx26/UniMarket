@@ -12,6 +12,8 @@ target/
 .settings
 .springBeans
 .sts4-cache
+.MyOllamaEnhancer
+.myollamaenhancer
 
 ### IntelliJ IDEA ###
 .idea
