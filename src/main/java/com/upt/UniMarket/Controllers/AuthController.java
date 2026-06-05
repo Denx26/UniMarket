@@ -22,7 +22,6 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    // --- REGISTRATION LOGIC ---
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody AuthRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -31,7 +30,6 @@ public class AuthController {
                     .body(new MessageResponse("Email is already registered!"));
         }
 
-        // Encrypt the password using AuthService before saving to SQLite
         String securePasswordHash = authService.hashPassword(request.getPassword());
 
         User newUser;
@@ -47,13 +45,10 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("Registration successful!"));
     }
 
-    // --- LOGIN LOGIC (Matches Activity Diagram Exactly) ---
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody AuthRequest request) {
-        // 1. Caută User în SQLite (DatabaseCheck)
         Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
 
-        // [DIAGRAM]: Email inexistent -> UserNotFound -> Afișează "Eroare Login"
         if (userOpt.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
@@ -62,20 +57,16 @@ public class AuthController {
 
         User user = userOpt.get();
 
-        // 2. PasswordVerification & BcryptCheck
         boolean isPasswordCorrect = authService.comparePassword(request.getPassword(), user.getPasswordHash());
 
-        // [DIAGRAM]: Parola greșită -> InvalidPassword -> Afișează "Eroare Login"
         if (!isPasswordCorrect) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(new MessageResponse("Invalid password."));
         }
 
-        // 3. [DIAGRAM]: Parola corectă -> Success -> Generează JWT / Sesiune (SessionCreated)
         String sessionToken = authService.generateSessionToken(user);
 
-        // 4. Send fields back to client for Role-Based Redirection
         return ResponseEntity.ok(new AuthResponse(user.getEmail(), user.getRole(), sessionToken));
     }
 }
