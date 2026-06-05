@@ -1,8 +1,6 @@
 package com.upt.UniMarket.Entity;
 
-
 import jakarta.persistence.*;
-
 import java.util.Objects;
 
 @Entity
