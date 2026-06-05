@@ -22,7 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
             menuCumparator.classList.remove('text-slate-300');
             menuCumparator.classList.add('bg-indigo-600/20', 'text-indigo-400', 'font-semibold');
         }
-        document.getElementById('sectionCumparator')?.classList.remove('hidden');
+
+        const sectionCumparator = document.getElementById('sectionCumparator');
+        if (sectionCumparator) {
+            sectionCumparator.classList.remove('hidden');
+        }
 
     } else if (role === 'SELLER') {
         const menuVanzator = document.getElementById('menuVanzator');
@@ -31,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             menuVanzator.classList.remove('text-slate-300');
             menuVanzator.classList.add('bg-amber-600/20', 'text-amber-400', 'font-semibold');
         }
+
         document.getElementById('sectionVanzator')?.classList.remove('hidden');
 
     } else if (role === 'ADMIN') {
@@ -40,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
             menuAdmin.classList.remove('text-slate-300');
             menuAdmin.classList.add('bg-red-600/20', 'text-red-400', 'font-semibold');
         }
+
         document.getElementById('sectionAdmin')?.classList.remove('hidden');
     }
 });
