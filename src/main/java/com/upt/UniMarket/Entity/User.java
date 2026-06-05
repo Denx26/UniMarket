@@ -16,7 +16,7 @@ public abstract class User {
     private String email;
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
-    @Column(name = "role", nullable = false)
+    @Column(name = "role", nullable = false, insertable = false, updatable = false)
     private String role;
 
     public User(String email, String passwordHash, String role){
