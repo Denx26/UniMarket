@@ -10,7 +10,7 @@ toggleAuthMode.addEventListener('click', (e) => {
     e.preventDefault();
     isLoginMode = !isLoginMode;
     formTitle.innerText = isLoginMode ? "Authentication" : "Registration";
-    submitBtn.innerText = isLoginMode ? "Connect" : "Creează Cont";
+    submitBtn.innerText = isLoginMode ? "Connect" : "Create Account";
     toggleAuthMode.innerText = isLoginMode ? "Don't have an account? Register" : "Already have an account? Log in";
     roleSelection.classList.toggle('hidden', isLoginMode);
     authAlert.classList.add('hidden');
