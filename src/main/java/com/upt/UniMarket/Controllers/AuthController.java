@@ -20,8 +20,9 @@ public class AuthController {
     private UserRepository userRepository;
 
     @Autowired
-    private AuthService authService; // Inject AuthService
+    private AuthService authService;
 
+    // --- REGISTRATION LOGIC ---
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody AuthRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -30,6 +31,7 @@ public class AuthController {
                     .body(new MessageResponse("Email is already registered!"));
         }
 
+        // Encrypt the password using AuthService before saving to SQLite
         String securePasswordHash = authService.hashPassword(request.getPassword());
 
         User newUser;
@@ -45,21 +47,35 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("Registration successful!"));
     }
 
+    // --- LOGIN LOGIC (Matches Activity Diagram Exactly) ---
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody AuthRequest request) {
+        // 1. Caută User în SQLite (DatabaseCheck)
         Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
 
-        if (userOpt.isEmpty() || !authService.comparePassword(request.getPassword(), userOpt.get().getPasswordHash())) {
+        // [DIAGRAM]: Email inexistent -> UserNotFound -> Afișează "Eroare Login"
+        if (userOpt.isEmpty()) {
             return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(new MessageResponse("Invalid email or password."));
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResponse("User account does not exist."));
         }
 
         User user = userOpt.get();
 
-        String token = authService.generateSessionToken(user);
-        System.out.println("Generated active session token: " + token);
+        // 2. PasswordVerification & BcryptCheck
+        boolean isPasswordCorrect = authService.comparePassword(request.getPassword(), user.getPasswordHash());
 
-        return ResponseEntity.ok(new AuthResponse(user.getEmail(), user.getRole(), user.getPasswordHash()));
+        // [DIAGRAM]: Parola greșită -> InvalidPassword -> Afișează "Eroare Login"
+        if (!isPasswordCorrect) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new MessageResponse("Invalid password."));
+        }
+
+        // 3. [DIAGRAM]: Parola corectă -> Success -> Generează JWT / Sesiune (SessionCreated)
+        String sessionToken = authService.generateSessionToken(user);
+
+        // 4. Send fields back to client for Role-Based Redirection
+        return ResponseEntity.ok(new AuthResponse(user.getEmail(), user.getRole(), sessionToken));
     }
 }

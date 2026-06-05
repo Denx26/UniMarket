@@ -1,9 +1,9 @@
 const role = localStorage.getItem('role');
 const email = localStorage.getItem('email');
-//
-// if (!role || !email) {
-//     window.location.href = './index.html';
-// }
+
+ if (!role || !email) {
+     window.location.href = './index.html';
+ }
 
 document.getElementById('userDisplayEmail').innerText = email;
 

@@ -6,6 +6,7 @@ const submitBtn = document.getElementById('submitBtn');
 const toggleAuthMode = document.getElementById('toggleAuthMode');
 const authAlert = document.getElementById('authAlert');
 
+// Toggle between Login and Registration views
 toggleAuthMode.addEventListener('click', (e) => {
     e.preventDefault();
     isLoginMode = !isLoginMode;
@@ -16,6 +17,7 @@ toggleAuthMode.addEventListener('click', (e) => {
     authAlert.classList.add('hidden');
 });
 
+// Handle form submission
 authForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     authAlert.classList.add('hidden');
@@ -29,13 +31,16 @@ authForm.addEventListener('submit', async (e) => {
 
     try {
         const response = await axios.post(url, payload);
+
         if (isLoginMode) {
+            localStorage.setItem('token', response.data.token);
             localStorage.setItem('role', response.data.role);
             localStorage.setItem('email', response.data.email);
+
             window.location.href = './dashboard.html';
         } else {
             alert('Account created! Please login.');
-            toggleAuthMode.click();
+            toggleAuthMode.click(); // Automatically switch view back to Login
         }
     } catch (error) {
         authAlert.classList.remove('hidden');

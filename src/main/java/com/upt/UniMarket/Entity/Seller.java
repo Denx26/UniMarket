@@ -28,12 +28,19 @@ public class Seller extends User{
         isApproved = approved;
     }
 
-    public void addProduct(){
-
+    public boolean addProduct(String productName, double productPrice){
+        System.out.println("Start Executing addProduct");
+        if(!this.isApproved){
+            System.out.println("DENIED: Seller " + this.getEmail() + " is NOT approved. Action blocked!");
+            return false;
+        }
+        System.out.println("SUCCESS: Seller " + this.getEmail() + " added [" + productName + "] at $" + productPrice);
+        return true;
     }
 
-    public void cancelSale(){
-
+    public void cancelSale(Long transactionId){
+        System.out.println("Seller Email: " + this.getEmail());
+        System.out.println("Action: Requesting complete void of active deal reference item: #" + transactionId);
     }
 
 
