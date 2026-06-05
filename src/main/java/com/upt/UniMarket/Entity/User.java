@@ -7,7 +7,9 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "users")
-public class User {
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "role", discriminatorType = DiscriminatorType.STRING)
+public abstract class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,6 +66,9 @@ public class User {
     public int hashCode(){
         return Objects.hashCode(id);
     }
+
+
+
 }
 
 
