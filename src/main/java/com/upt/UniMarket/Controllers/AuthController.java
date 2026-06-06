@@ -65,6 +65,12 @@ public class AuthController {
                     .body(new MessageResponse("Invalid password."));
         }
 
+        if(user instanceof Seller seller && seller.getAccountStatus() == SellerStatus.CANCELLED)
+        {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new MessageResponse("This seller account has been cancelled by the administrator"));
+        }
+
         String sessionToken = authService.generateSessionToken(user);
 
         return ResponseEntity.ok(new AuthResponse(user.getEmail(), user.getRole(), sessionToken));
