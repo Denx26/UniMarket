@@ -22,11 +22,59 @@ public class Product {
 		return pretMin != null && pret > pretMin || pret > this.pret;
 	}
 
-	public void setNegociabil(boolean negociabil) {
+	public Long getPid() {
+		return pid;
+	}
+
+	public Long getVanzatorId() {
+		return vanzatorId;
+	}
+
+	public void setVanzatorId(Long vanzatorId) {
+		this.vanzatorId = vanzatorId;
+	}
+
+	public String getNume() {
+		return nume;
+	}
+
+	public void setNume(String nume) {
+		this.nume = nume;
+	}
+
+	public Float getPret() {
+		return pret;
+	}
+
+	public void setPret(Float pret) {
+		this.pret = pret;
+	}
+
+	public String getDescriere() {
+		return descriere;
+	}
+
+	public void setDescriere(String descriere) {
+		this.descriere = descriere;
+	}
+
+	public Boolean getNegociabil() {
+		return negociabil;
+	}
+
+	public void setNegociabil(Boolean negociabil) {
 		this.negociabil = negociabil;
 	}
 
-	public boolean getNegeciabil() {
-		return negociabil;
+	public Float getPretMin() {
+		return pretMin;
+	}
+
+	public void setPretMin(Float pretMin) {
+		this.pretMin = pretMin;
+	}
+
+	public void setPid(Long pid) {
+		this.pid = pid;
 	}
 }
