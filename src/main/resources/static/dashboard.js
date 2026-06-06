@@ -30,12 +30,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } else if (role === 'SELLER') {
         const menuVanzator = document.getElementById('menuVanzator');
+        const menuAdaugareProdus = document.getElementById('menuAdaugareProdus');
         if (menuVanzator) {
             menuVanzator.classList.remove('hidden');
             menuVanzator.classList.remove('text-slate-300');
             menuVanzator.classList.add('bg-amber-600/20', 'text-amber-400', 'font-semibold');
         }
 
+        if (menuAdaugareProdus) {
+            menuAdaugareProdus.classList.remove('hidden');
+            menuAdaugareProdus.classList.remove('text-slate-300');
+            menuAdaugareProdus.classList.add('bg-amber-600/20', 'text-amber-400', 'font-semibold');
+        }
         document.getElementById('sectionVanzator')?.classList.remove('hidden');
 
     } else if (role === 'ADMIN') {
@@ -52,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function hideAllSections() {
     const elements = [
-        'menuAdmin', 'menuVanzator', 'menuCumparator',
+        'menuAdmin', 'menuVanzator', 'menuCumparator', 'menuAdaugareProdus',
         'sectionAdmin', 'sectionVanzator', 'sectionCumparator'
     ];
     elements.forEach(id => {
