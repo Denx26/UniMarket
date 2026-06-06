@@ -1,14 +1,11 @@
 function togglePretMin() {
     const group = document.getElementById('pretMinGroup');
     const checked = document.getElementById('prodNegociabil').checked;
-    if (checked) {
-        group.style.maxHeight = '80px';
-        group.style.opacity = '1';
-    } else {
-        group.style.maxHeight = '0';
-        group.style.opacity = '0';
-        document.getElementById('prodPretMin').value = '';
-    }
+    group.classList.toggle('max-h-0', !checked);
+    group.classList.toggle('opacity-0', !checked);
+    group.classList.toggle('max-h-20', checked);  // or max-h-24
+    group.classList.toggle('opacity-100', checked);
+    if (!checked) document.getElementById('prodPretMin').value = '';
 }
 
 function showProductAlert(type, msg) {
@@ -30,21 +27,23 @@ async function submitProduct() {
     const pretMinVal = document.getElementById('prodPretMin').value;
     const pretMin = negociabil && pretMinVal ? parseFloat(pretMinVal) : null;
 
-    if (!nume) return showProductAlert('error', 'Please enter a product name.');
-    if (isNaN(pret) || pret < 0) return showProductAlert('error', 'Please enter a valid price.');
+    if (!nume) return showProductAlert('error', 'Va rog introduceti un nume valid.');
+    if (isNaN(pret) || pret < 0) return showProductAlert('error', 'Va rog introduceti un pret valid.');
     if (negociabil && pretMin !== null && pretMin >= pret)
-        return showProductAlert('error', 'Minimum price must be lower than the listed price.');
+        return showProductAlert('error', 'Pretul minim trebuie sa fie mai mic decat pretul listat.');
 
     // Pull vanzatorId from wherever you store it after login
-    const vanzatorId = parseInt(localStorage.getItem('userId'));
+    const vanzatorId = parseInt(localStorage.getItem('id'));
 
     try {
         await axios.post('/api/produse/', { vanzatorId, nume, pret, descriere, negociabil, pretMin });
-        showProductAlert('success', 'Product listed successfully!');
+        showProductAlert('success', 'Produs adaugat cu succes!');
         ['prodNume','prodDescriere','prodPret','prodPretMin'].forEach(id => document.getElementById(id).value = '');
         document.getElementById('prodNegociabil').checked = false;
         togglePretMin();
     } catch (e) {
-        showProductAlert('error', 'Failed to add product. Please try again.');
+        showProductAlert('error', 'Eroare. Va rog sa incercati din nou.');
     }
 }
+document.getElementById('prodNegociabil').addEventListener('change', togglePretMin);
+document.getElementById('butonSubmit').addEventListener('click', submitProduct);

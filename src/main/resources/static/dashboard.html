@@ -73,25 +73,22 @@
 
     <div id="sectionVanzator" class="hidden space-y-6 relative z-10">
         <div class="bg-white/[0.02] backdrop-blur-md p-6 rounded-2xl border border-white/[0.05] shadow-xl">
-            <h2 class="text-xl font-bold text-white mb-2 tracking-tight">Add New Product</h2>
+            <h2 class="text-xl font-bold text-white mb-2 tracking-tight">Adauga un produs nou</h2>
             <p class="text-slate-400 text-sm mb-4">Pune la vânzare bunuri cu preț fix sau negociabil.</p>
             <div id="productAlert" class="hidden px-4 py-3 rounded-xl mb-4 text-sm"></div>
 
-            <!-- Name -->
             <div class="mb-5">
-                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Product Name</label>
-                <input id="prodNume" type="text" placeholder="e.g. Calculus textbook, Laptop stand…"
+                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Nume Produs</label>
+                <input id="prodNume" type="text" placeholder="ex Caiet, Laptop..."
                        class="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-600 outline-none focus:border-indigo-500/60 focus:ring-2 focus:ring-indigo-500/10 transition" />
             </div>
 
-            <!-- Description -->
             <div class="mb-5">
-                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Description</label>
-                <textarea id="prodDescriere" rows="3" placeholder="Condition, details, what's included…"
+                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Descriere</label>
+                <textarea id="prodDescriere" rows="3" placeholder="Conditie, detalii, ce e inclus..."
                           class="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-600 outline-none focus:border-indigo-500/60 focus:ring-2 focus:ring-indigo-500/10 transition resize-y"></textarea>
             </div>
 
-            <!-- Price + Negotiable -->
             <div class="grid grid-cols-2 gap-4 mb-5">
                 <div>
                     <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Price (RON)</label>
@@ -99,24 +96,23 @@
                            class="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-600 outline-none focus:border-indigo-500/60 focus:ring-2 focus:ring-indigo-500/10 transition" />
                 </div>
                 <div class="flex flex-col justify-end">
-                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Negotiable?</label>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Negociabil?</label>
                     <label class="flex items-center gap-3 bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-2.5 cursor-pointer">
-                        <input type="checkbox" id="prodNegociabil" class="accent-indigo-500 w-4 h-4" onchange="togglePretMin()" />
-                        <span class="text-sm text-slate-300">Allow negotiation</span>
+                        <input type="checkbox" id="prodNegociabil" class="accent-indigo-500 w-4 h-4" />
+                        <span class="text-sm text-slate-300">Permite Negocieri</span>
                     </label>
                 </div>
             </div>
 
-            <!-- Minimum Price (conditional) -->
-            <div id="pretMinGroup" class="mb-5 overflow-hidden transition-all duration-300 max-h-0 opacity-0">
-                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Minimum Acceptable Price (RON)</label>
+            <div id="pretMinGroup" class="mb-5 overflow-hidden transition-all duration-300 opacity-0 max-h-0">
+                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Pret Minim (RON)</label>
                 <input id="prodPretMin" type="number" min="0" step="0.01" placeholder="0.00"
                        class="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-600 outline-none focus:border-indigo-500/60 focus:ring-2 focus:ring-indigo-500/10 transition" />
             </div>
 
-            <button onclick="submitProduct()"
+            <button id="butonSubmit"
                     class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold py-3 rounded-xl text-sm transition shadow-lg shadow-indigo-500/20">
-                + Add Product
+                Adauga Produs
             </button>        </div>
     </div>
 
@@ -135,6 +131,7 @@
 
 <script src="./dashboard.js?v=1" defer></script>
 <script src="./admin.js?v=1" defer></script>
+<script src="./product.js?v=1" defer></script>
 
 </body>
 </html>
