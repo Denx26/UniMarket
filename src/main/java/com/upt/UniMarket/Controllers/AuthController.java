@@ -73,6 +73,6 @@ public class AuthController {
 
         String sessionToken = authService.generateSessionToken(user);
 
-        return ResponseEntity.ok(new AuthResponse(user.getEmail(), user.getRole(), sessionToken));
+        return ResponseEntity.ok(new AuthResponse(user.getId(), user.getEmail(), user.getRole(), sessionToken));
     }
 }

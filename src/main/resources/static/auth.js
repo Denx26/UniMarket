@@ -36,6 +36,7 @@ authForm.addEventListener('submit', async (e) => {
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('role', response.data.role);
             localStorage.setItem('email', response.data.email);
+            localStorage.setItem('id', response.data.id);
 
             window.location.href = './dashboard.html';
         } else {
