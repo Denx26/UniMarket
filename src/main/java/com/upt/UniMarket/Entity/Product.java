@@ -10,7 +10,7 @@ public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long pid;
-
+	private Long vanzatorId;
 	private String nume;
 	private Float pret;
 	private String descriere;
