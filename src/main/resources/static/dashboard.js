@@ -23,11 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
             menuCumparator.classList.add('bg-indigo-600/20', 'text-indigo-400', 'font-semibold');
         }
 
-        const sectionCumparator = document.getElementById('sectionCumparator');
-        if (sectionCumparator) {
-            sectionCumparator.classList.remove('hidden');
-        }
-
+        document.getElementById('sectionCumparator')?.classList.remove('hidden');
 
     } else if (role === 'SELLER') {
         const menuVanzator = document.getElementById('menuVanzator');

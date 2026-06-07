@@ -1,16 +1,9 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const role = localStorage.getItem('role');
-    if (role === 'BUYER') {
-        loadAvailableProducts();
-    }
-});
-
 async function loadAvailableProducts() {
     const grid = document.getElementById('productGrid');
     if (!grid) return;
 
     try {
-        const response = await axios.get('/api/products/available');
+        const response = await axios.get('/api/produse/disponibile');
         const products = response.data;
 
         if (!products || products.length === 0) {
@@ -55,7 +48,7 @@ async function buyProduct(productId) {
     const alertBox = document.getElementById('showcaseAlert');
 
     try {
-        const response = await axios.post(`/api/purchase/${productId}`, { buyerEmail });
+        const response = await axios.post(`/api/produse/cumparare/${productId}`, { buyerEmail });
 
         if (alertBox) {
             alertBox.textContent = response.data.message;
@@ -81,6 +74,26 @@ async function buyProduct(productId) {
     }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const role = localStorage.getItem('role');
+    if (role === "BUYER") {
+        loadAvailableProducts();
+    }
+});
+
 document.getElementById('menuCumparator')?.addEventListener('click', () => {
+    const categorieAdaugareProdus = document.getElementById("categorieAdaugareProdus");
+    const categorieVeziToateProdusele = document.getElementById("categorieVeziToateProdusele");
+    const sectionAdmin = document.getElementById('sectionAdmin');
+    const sectionVanzator = document.getElementById('sectionVanzator');
+    const sectionCumparator = document.getElementById('sectionCumparator');
+
+    if (sectionAdmin) sectionAdmin.classList.add('hidden');
+    if (sectionVanzator) sectionVanzator.classList.add('hidden');
+    if (categorieAdaugareProdus) categorieAdaugareProdus.classList.add('hidden');
+    if (categorieVeziToateProdusele) categorieVeziToateProdusele.classList.add('hidden');
+
+    if (sectionCumparator) sectionCumparator.classList.remove('hidden');
+
     loadAvailableProducts();
 });
