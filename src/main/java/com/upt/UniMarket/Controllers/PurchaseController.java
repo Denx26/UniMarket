@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/produse")
 @CrossOrigin(origins = "*")
 public class PurchaseController {
 
@@ -31,13 +31,13 @@ public class PurchaseController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/products/available")
+    @GetMapping("/disponibile")
     public ResponseEntity<List<Product>> getAvailableProducts() {
         List<Product> availableProducts = productRepository.findAll();
         return ResponseEntity.ok(availableProducts);
     }
 
-    @PostMapping("/purchase/{productId}")
+    @PostMapping("/cumparare/{productId}")
     @Transactional
     public ResponseEntity<?> purchaseProduct(@PathVariable Long productId, @RequestBody PurchaseRequest request) {
         Optional<Product> productOpt = productRepository.findById(productId);
