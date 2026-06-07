@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sectionCumparator.classList.remove('hidden');
         }
 
+
     } else if (role === 'SELLER') {
         const menuVanzator = document.getElementById('menuVanzator');
         const menuAdaugareProdus = document.getElementById('menuAdaugareProdus');
