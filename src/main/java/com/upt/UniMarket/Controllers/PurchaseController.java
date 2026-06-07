@@ -31,30 +31,25 @@ public class PurchaseController {
     @Autowired
     private UserRepository userRepository;
 
-    // 1. Get all available products for the storefront showcase
     @GetMapping("/products/available")
     public ResponseEntity<List<Product>> getAvailableProducts() {
         List<Product> availableProducts = productRepository.findAll();
         return ResponseEntity.ok(availableProducts);
     }
 
-    // 2. Buy a product: Create a transaction record and delete the product atomically
     @PostMapping("/purchase/{productId}")
     @Transactional
     public ResponseEntity<?> purchaseProduct(@PathVariable Long productId, @RequestBody PurchaseRequest request) {
-        // Find the product targeted for purchase
         Optional<Product> productOpt = productRepository.findById(productId);
         if (productOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new MessageResponse("The selected product is no longer available!"));
+                    .body(new MessageResponse("Produsul selectat nu mai este disponibil!"));
         }
         Product product = productOpt.get();
 
-        // Cross-reference user table to extract the seller's email address
         Optional<User> sellerOpt = userRepository.findById(product.getVanzatorId());
         String sellerEmail = sellerOpt.map(User::getEmail).orElse("unknown.seller@email.com");
 
-        // Construct the transactional history record
         Transaction transaction = new Transaction(
                 product.getNume(),
                 product.getPret(),
@@ -62,14 +57,12 @@ public class PurchaseController {
                 sellerEmail
         );
 
-        // Perform the safe transactional operations
         transactionRepository.save(transaction);
         productRepository.deleteById(productId);
 
-        return ResponseEntity.ok(new MessageResponse("Purchase completed successfully! Product removed from showcase."));
+        return ResponseEntity.ok(new MessageResponse("Cumparare efectuata cu succes! Produsul a fost eliminat din vitrina."));
     }
 
-    // 3. View the comprehensive sales transaction history log
     @GetMapping("/purchase/history")
     public ResponseEntity<List<Transaction>> getPurchaseHistory() {
         List<Transaction> history = transactionRepository.findAll();
