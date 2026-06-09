@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/offers")
 public class OfferController {
@@ -24,6 +26,11 @@ public class OfferController {
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<List<Offer>> getOffers(@PathVariable Long productId) {
+        return ResponseEntity.ok(offerService.getOfferByProductId(productId));
     }
 
     @PostMapping("/{ooferId}/approve")
