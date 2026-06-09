@@ -18,6 +18,7 @@ function showProductAlert(type, msg) {
     el.classList.remove('hidden');
     setTimeout(() => el.classList.add('hidden'), 4000);
 }
+
 async function loadMyProducts() {
     const vanzatorId = parseInt(localStorage.getItem('id'));
     const tbody = document.getElementById('myProductsTableBody');
@@ -43,11 +44,19 @@ async function loadMyProducts() {
         }
                 </td>
                 <td class="px-4 py-3 text-slate-400">${p.pretMin != null ? p.pretMin.toFixed(2) + ' RON' : '—'}</td>
-                <td class="px-4 py-3 text-right space-x-2">
-                    <button onclick="deleteProduct(${p.pid})"
-                        class="text-xs bg-red-950/40 hover:bg-red-600/80 text-red-400 hover:text-white border border-red-500/30 px-3 py-1.5 rounded-lg transition">
-                        Delete
-                    </button>
+                <td class="px-4 py-3 text-right">
+                    <div class="flex justify-end gap-2">
+                        ${p.negociabil ? `
+                            <button onclick="openViewOffersModal(${p.pid})"
+                                class="text-xs bg-indigo-950/40 hover:bg-indigo-600/80 text-indigo-400 hover:text-white border border-indigo-500/30 px-3 py-1.5 rounded-lg transition">
+                                Vezi Oferte
+                            </button>
+                        ` : ''}
+                        <button onclick="deleteProduct(${p.pid})"
+                            class="text-xs bg-red-950/40 hover:bg-red-600/80 text-red-400 hover:text-white border border-red-500/30 px-3 py-1.5 rounded-lg transition">
+                            Delete
+                        </button>
+                    </div>
                 </td>
             </tr>
         `).join('');
@@ -70,6 +79,7 @@ async function deleteProduct(pid) {
         alert('Failed to delete product.');
     }
 }
+
 async function submitProduct() {
     const nume = document.getElementById('prodNume').value.trim();
     const descriere = document.getElementById('prodDescriere').value.trim();
@@ -97,8 +107,10 @@ async function submitProduct() {
         showProductAlert('error', 'Eroare. Va rog sa incercati din nou.');
     }
 }
+
 document.getElementById('prodNegociabil').addEventListener('change', togglePretMin);
 document.getElementById('butonSubmit').addEventListener('click', submitProduct);
+
 document.getElementById('menuVanzator').addEventListener('click', () => {
     const categorieAdaugareProdus = document.getElementById("categorieAdaugareProdus");
     const categorieVeziToateProdusele = document.getElementById("categorieVeziToateProdusele");
@@ -110,6 +122,7 @@ document.getElementById('menuVanzator').addEventListener('click', () => {
     }
     loadMyProducts();
 });
+
 document.getElementById('menuAdaugareProdus').addEventListener('click', () => {
     const categorieAdaugareProdus = document.getElementById("categorieAdaugareProdus");
     const categorieVeziToateProdusele = document.getElementById("categorieVeziToateProdusele");
@@ -123,8 +136,79 @@ document.getElementById('menuAdaugareProdus').addEventListener('click', () => {
     }
     loadMyProducts();
 });
+
 document.addEventListener('DOMContentLoaded', () => {
     const role = localStorage.getItem('role');
     if (role === "SELLER")
         loadMyProducts();
-})
+});
+
+function closeViewOffersModal() {
+    document.getElementById('viewOffersModal').classList.add('hidden');
+}
+
+async function openViewOffersModal(productId) {
+    document.getElementById('viewOffersModal').classList.remove('hidden');
+    const tbody = document.getElementById('offersTableBody');
+    tbody.innerHTML = `<tr><td colspan="3" class="px-4 py-8 text-center text-slate-500 text-xs"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Se încarcă ofertele...</td></tr>`;
+
+    try {
+        const response = await axios.get(`/api/offers/product/${productId}`);
+        const offers = response.data;
+
+        if (!offers || offers.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" class="px-4 py-8 text-center text-slate-500 text-xs">Nu există nicio ofertă momentan pentru acest produs.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = offers.map(offer => `
+            <tr class="hover:bg-white/[0.02] transition">
+                <td class="px-4 py-3 text-slate-300 font-medium">Cumpărător #${offer.buyerId}</td>
+                <td class="px-4 py-3 font-bold text-emerald-400">${offer.proposedPrice.toFixed(2)} RON</td>
+                <td class="px-4 py-3 text-right">
+                    <button onclick="approveOffer(${offer.id}, ${productId})" class="bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition border border-emerald-500/30">
+                        <i class="fa-solid fa-check mr-1"></i> Aprobă
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+
+    } catch (error) {
+        tbody.innerHTML = `<tr><td colspan="3" class="px-4 py-8 text-center text-red-400 text-xs">Eroare la preluarea ofertelor din baza de date.</td></tr>`;
+    }
+}
+
+async function approveOffer(offerId, productId) {
+    if (!confirm("Ești sigur că vrei să accepți această ofertă? Produsul va fi marcat ca vândut și va dispărea de pe platformă.")) return;
+
+    const alertBox = document.getElementById('viewOffersAlert');
+
+    try {
+        await axios.post(`/api/offers/${offerId}/approve`);
+
+        alertBox.innerText = "Ofertă acceptată cu succes! Produsul a fost vândut.";
+        alertBox.className = 'border px-4 py-3 rounded-xl mb-4 text-sm font-medium bg-emerald-950/40 border-emerald-500/30 text-emerald-400 block';
+        alertBox.classList.remove('hidden');
+
+        setTimeout(() => {
+            closeViewOffersModal();
+            alertBox.classList.add('hidden');
+            loadMyProducts();
+        }, 2000);
+
+    } catch (error) {
+        let errorMsg = "A apărut o eroare la aprobarea ofertei.";
+        if (error.response && error.response.data) {
+            if (typeof error.response.data === 'string') {
+                errorMsg = error.response.data;
+            } else if (error.response.data.message) {
+                errorMsg = error.response.data.message;
+            } else if (error.response.data.error) {
+                errorMsg = "Eroare Backend: " + error.response.data.error;
+            }
+        }
+        alertBox.innerText = error.response?.data || "A apărut o eroare la aprobarea ofertei.";
+        alertBox.className = 'border px-4 py-3 rounded-xl mb-4 text-sm font-medium bg-red-950/40 border-red-500/30 text-red-400 block';
+        alertBox.classList.remove('hidden');
+    }
+}

@@ -5,6 +5,7 @@ import com.upt.UniMarket.Entity.Offer;
 import com.upt.UniMarket.Entity.Product;
 import com.upt.UniMarket.Repositories.OfferRepository;
 import com.upt.UniMarket.Repositories.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,7 @@ public class OfferService {
         return offerRepository.findByProductId(prductId);
     }
 
+    @Transactional
     public void approveOffer(Long offerId) throws Exception {
         Offer offer = offerRepository.findById(offerId).orElseThrow(()->new Exception("Offer not found"));
 
