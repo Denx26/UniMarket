@@ -1,3 +1,4 @@
+
 package com.upt.UniMarket.Controllers;
 
 import com.upt.UniMarket.Entity.*;
@@ -76,3 +77,4 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(user.getId(), user.getEmail(), user.getRole(), sessionToken));
     }
 }
+
