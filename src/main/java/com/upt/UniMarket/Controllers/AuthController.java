@@ -1,3 +1,4 @@
+
 package com.upt.UniMarket.Controllers;
 
 import com.upt.UniMarket.Entity.*;
@@ -65,10 +66,10 @@ public class AuthController {
                     .body(new MessageResponse("Invalid password."));
         }
 
-        if(user instanceof Seller seller && seller.getAccountStatus() == SellerStatus.CANCELLED)
-        {
+        if (user instanceof Seller seller &&
+                (seller.getAccountStatus() == SellerStatus.CANCELLED || seller.getAccountStatus() == SellerStatus.REJECTED)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new MessageResponse("This seller account has been cancelled by the administrator"));
+                    .body(new MessageResponse("Acest cont de vanzator nu are acces (anulat sau respins de administrator)."));
         }
 
         String sessionToken = authService.generateSessionToken(user);
@@ -76,3 +77,4 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponse(user.getId(), user.getEmail(), user.getRole(), sessionToken));
     }
 }
+
