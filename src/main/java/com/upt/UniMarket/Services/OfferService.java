@@ -20,6 +20,7 @@ public class OfferService {
     @Autowired
     private ProductRepository productRepository;
 
+
     public Offer createOffer(OfferRequest request) throws Exception {
         Product product = productRepository.findById(request.getProductId()).orElseThrow(() -> new Exception("Product not found"));
 
