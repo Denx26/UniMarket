@@ -138,4 +138,22 @@ public class AdminModuleTest {
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
+
+    @Test
+    void activeSeller_canLogIn() {
+        Seller seller = new Seller("seller@test.com", "hash");
+        seller.setAccountStatus(SellerStatus.ACTIVE);
+
+        AuthRequest request = new AuthRequest();
+        request.setEmail("seller@test.com");
+        request.setPassword("123");
+
+        when(userRepository.findByEmail("seller@test.com")).thenReturn(Optional.of(seller));
+        when(authService.comparePassword("123", "hash")).thenReturn(true);
+        when(authService.generateSessionToken(seller)).thenReturn("token123");
+
+        ResponseEntity<?> response = authController.loginUser(request);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
 }
