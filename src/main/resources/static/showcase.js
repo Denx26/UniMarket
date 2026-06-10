@@ -26,8 +26,14 @@ async function loadAvailableProducts() {
                 </div>
 
                 <div class="flex gap-2 w-full mt-auto">
+                    ${product.negociabil ? `
+                        <button onclick="openOfferModal(${product.pid}, '${product.nume.replace(/'/g, "\\'")}')" class="flex-1 bg-white/[0.05] hover:bg-white/[0.1] text-slate-200 border border-white/[0.05] font-semibold text-xs py-2.5 rounded-xl transition duration-200 flex items-center justify-center gap-1.5 shadow-lg">
+                            <i class="fa-solid fa-handshake"></i> Ofertă
+                        </button>
+                    ` : ''}
+                    
                     <button onclick="buyProduct(${product.pid})" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs py-2.5 rounded-xl transition duration-200 flex items-center justify-center gap-1.5 shadow-lg shadow-indigo-600/10">
-                        <i class="fa-solid fa-cart-shopping"></i> Cumpara Acum
+                        <i class="fa-solid fa-cart-shopping"></i> Cumpără
                     </button>
                 </div>
             </div>
@@ -97,3 +103,55 @@ document.getElementById('menuCumparator')?.addEventListener('click', () => {
 
     loadAvailableProducts();
 });
+
+
+function openOfferModal(productId, productName) {
+    document.getElementById('offerProductId').value = productId;
+    document.getElementById('offerModalProductName').innerText = "Pentru: " + productName;
+    document.getElementById('proposedPriceInput').value = '';
+
+    const alertBox = document.getElementById('offerAlert');
+    if (alertBox) alertBox.classList.add('hidden');
+
+    document.getElementById('offerModal').classList.remove('hidden');
+}
+
+function closeOfferModal() {
+    document.getElementById('offerModal').classList.add('hidden');
+}
+
+async function submitOffer() {
+    const productId = document.getElementById('offerProductId').value;
+    const price = document.getElementById('proposedPriceInput').value;
+    const alertBox = document.getElementById('offerAlert');
+
+    const buyerId = localStorage.getItem('userId') || 1;
+
+    if (!price || price <= 0) {
+        showAlert(alertBox, 'Te rugăm să introduci un preț valid.', false);
+        return;
+    }
+
+    try {
+        const response = await axios.post('/api/offers', {
+            productId: parseInt(productId),
+            buyerId: parseInt(buyerId),
+            proposedPrice: parseFloat(price)
+        });
+
+        showAlert(alertBox, 'Oferta a fost trimisă cu succes!', true);
+        setTimeout(() => closeOfferModal(), 2000);
+
+    } catch (error) {
+        const errorMsg = error.response?.data || "Prețul propus este prea mic sau a apărut o eroare.";
+        showAlert(alertBox, errorMsg, false);
+    }
+}
+
+function showAlert(element, message, isSuccess) {
+    if (!element) return;
+    element.innerText = message;
+    element.className = isSuccess
+        ? 'border px-4 py-3 rounded-xl mb-4 text-sm font-medium bg-emerald-950/40 border-emerald-500/30 text-emerald-400 block'
+        : 'border px-4 py-3 rounded-xl mb-4 text-sm font-medium bg-red-950/40 border-red-500/30 text-red-400 block';
+}

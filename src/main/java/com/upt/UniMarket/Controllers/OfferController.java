@@ -33,8 +33,8 @@ public class OfferController {
         return ResponseEntity.ok(offerService.getOfferByProductId(productId));
     }
 
-    @PostMapping("/{ooferId}/approve")
-    public ResponseEntity<?> approveOffer(@PathVariable Long offerId) {
+    @PostMapping("/{offerId}/approve")
+    public ResponseEntity<?> approveOffer(@PathVariable() Long offerId) {
         try {
             offerService.approveOffer(offerId);
             return ResponseEntity.ok("Offer approved successfully, product has been sold");
